@@ -57,10 +57,36 @@ jobs:
           name: python-app
           path: .
 
-      # Step 6: Deploy to Azure App Service
+      # Step 6: Validate publish profile before deployment
+      - name: Validate publish profile has KUDU/SCM url
+        env:
+          AZURE_PUBLISH_PROFILE: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${AZURE_PUBLISH_PROFILE:-}" ]; then
+            echo "ERROR: AZURE_PUBLISH_PROFILE secret is empty or not set. Add the publish profile XML to the repository secret."
+            exit 1
+          fi
+
+          printf '%s' "$AZURE_PUBLISH_PROFILE" > /tmp/azure_publish_profile.xml
+
+          if ! grep -qiE 'scm\.azurewebsites\.net|kudu' /tmp/azure_publish_profile.xml && \
+             ! grep -qiE 'publishMethod="MSDeploy"' /tmp/azure_publish_profile.xml; then
+            echo "ERROR: publish profile does not contain a KUDU/SCM URL or MSDeploy publishMethod."
+            echo "Regenerate the publish profile for the App Service named 'tic-tac-toe' and update the AZURE_PUBLISH_PROFILE secret."
+            exit 1
+          fi
+
+          echo "Publish profile looks valid."
+
+     # Step 7: Deploy to Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
+          app-name: 'tic-tac-toe'
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: .
           app-name: 'tic-tac-toe'
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: .
