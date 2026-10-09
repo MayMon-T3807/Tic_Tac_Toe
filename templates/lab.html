@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% set page = 'lab' %}
+{% block title %}Lab: watch the computers{% endblock %}
+
+{% block content %}
+<section class="lab-intro">
+  <h1>The lab</h1>
+  <p class="lead">Let the computers play each other, run hundreds of games, and see how much work Alpha-Beta pruning saves.</p>
+</section>
+
+<section class="lab-card">
+  <h2>Watch two computers play</h2>
+  <div class="lab-controls">
+    <label>X is
+      <select id="watch-x">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard" selected>Unbeatable</option>
+      </select>
+    </label>
+    <label>O is
+      <select id="watch-o">
+        <option value="easy">Easy</option>
+        <option value="medium" selected>Medium</option>
+        <option value="hard">Unbeatable</option>
+      </select>
+    </label>
+    <button class="big-button small" id="watch-button">Watch a game</button>
+  </div>
+  <div class="watch-area">
+    <svg id="watch-board" viewBox="0 0 300 300" aria-label="AI versus AI board">
+      <g id="watch-grid" filter="url(#rough)"></g>
+      <g id="watch-marks" filter="url(#rough)"></g>
+      <g id="watch-strike"></g>
+    </svg>
+    <ol class="move-log" id="watch-log"></ol>
+  </div>
+  <p class="status" id="watch-status" aria-live="polite"></p>
+</section>
+
+<section class="lab-card">
+  <h2>Run a match</h2>
+  <div class="lab-controls">
+    <label>X is
+      <select id="bench-x">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard" selected>Unbeatable</option>
+      </select>
+    </label>
+    <label>O is
+      <select id="bench-o">
+        <option value="easy" selected>Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Unbeatable</option>
+      </select>
+    </label>
+    <label>Games
+      <input type="number" id="bench-games" value="100" min="1" max="200">
+    </label>
+    <button class="big-button small" id="bench-button">Run match</button>
+  </div>
+  <div class="bars" id="bench-bars"></div>
+  <p class="status" id="bench-status" aria-live="polite"></p>
+</section>
+
+<section class="lab-card">
+  <h2>How much does pruning save?</h2>
+  <p>The first move on an empty board, searched with and without Alpha-Beta pruning. Both pick the same move.</p>
+  <button class="big-button small" id="prune-button">Compare</button>
+  <div class="bars" id="prune-bars"></div>
+  <p class="status" id="prune-status" aria-live="polite"></p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/lab.js') }}"></script>
+{% endblock %}

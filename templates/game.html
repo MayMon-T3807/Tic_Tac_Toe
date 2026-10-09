@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set page = 'play' %}
+{% block title %}Playing Tic-Tac-Toe{% endblock %}
+
+{% block content %}
+<section class="game-layout">
+  <div class="board-side">
+    <p class="who" id="who"></p>
+    <svg id="board" viewBox="0 0 300 300" role="group" aria-label="Tic-Tac-Toe board">
+      <g id="grid" filter="url(#rough)"></g>
+      <g id="marks" filter="url(#rough)"></g>
+      <g id="strike"></g>
+      <g id="hit-areas"></g>
+    </svg>
+    <p class="status" id="status" aria-live="polite"></p>
+    <div class="button-row">
+      <button class="big-button" id="new-game">Play again</button>
+      <a class="plain-button" href="{{ url_for('index') }}">Change opponent</a>
+    </div>
+  </div>
+
+  <aside class="notebook" id="notebook">
+    <h2>The computer's notes</h2>
+    <p class="note-help" id="note-help">After each computer move, its scores for every square show up here.</p>
+    <div class="score-grid" id="score-grid"></div>
+    <p class="note-line" id="note-chosen"></p>
+    <p class="note-line" id="note-nodes"></p>
+    <p class="note-small">A higher number is better for the computer. 0 means a draw with best play, a positive score means a win, a negative score means a loss.</p>
+  </aside>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% set page = 'home' %}
+{% block title %}Tic-Tac-Toe on paper{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Tic-Tac-Toe</h1>
+  <svg class="underline" viewBox="0 0 420 24" aria-hidden="true"><g filter="url(#rough)" id="title-underline"></g></svg>
+  <p class="lead">Pick your mark, pick who you play against, and start. The computer draws its moves right next to yours.</p>
+</section>
+
+<section class="choose">
+  <h2>Pick your mark</h2>
+  <div class="choice-row" id="mark-choices">
+    <button class="choice selected" data-value="X" aria-pressed="true">
+      <svg viewBox="0 0 100 100" class="choice-mark"><g filter="url(#rough)" data-mark="X"></g></svg>
+      <span>Play as X</span>
+      <small>You go first</small>
+    </button>
+    <button class="choice" data-value="O" aria-pressed="false">
+      <svg viewBox="0 0 100 100" class="choice-mark"><g filter="url(#rough)" data-mark="O"></g></svg>
+      <span>Play as O</span>
+      <small>The computer goes first</small>
+    </button>
+  </div>
+
+  <h2>Pick your opponent</h2>
+  <div class="choice-row" id="opponent-choices">
+    <button class="choice" data-value="easy" aria-pressed="false">
+      <span class="choice-title">Easy</span>
+      <small>Picks any empty square. Good for a warm-up.</small>
+    </button>
+    <button class="choice" data-value="medium" aria-pressed="false">
+      <span class="choice-title">Medium</span>
+      <small>Wins when it can, blocks you, likes the center.</small>
+    </button>
+    <button class="choice selected" data-value="hard" aria-pressed="true">
+      <span class="choice-title">Unbeatable</span>
+      <small>Looks at every possible game. You can draw, not win.</small>
+    </button>
+    <button class="choice" data-value="friend" aria-pressed="false">
+      <span class="choice-title">A friend</span>
+      <small>Two players, one screen, taking turns.</small>
+    </button>
+  </div>
+
+  <div class="start-row">
+    <button class="big-button" id="start-button">Start the game</button>
+    <p class="summary" id="summary"></p>
+  </div>
+</section>
+
+<section class="about">
+  <h2>How to play</h2>
+  <p>Players take turns drawing their mark in an empty square of a 3 by 3 grid. Get three of your marks in a row, in a column or on a diagonal, and you win. If all nine squares fill up with no line, it is a draw.</p>
+
+  <h2>Who is on the other side of the paper</h2>
+  <div class="brains">
+    <article>
+      <h3>Easy: random</h3>
+      <p>It chooses any free square, with no plan at all.</p>
+    </article>
+    <article>
+      <h3>Medium: rules of thumb</h3>
+      <p>Win now if possible. Otherwise block you. Otherwise take the center, then a corner, then an edge.</p>
+    </article>
+    <article>
+      <h3>Unbeatable: Minimax</h3>
+      <p>It imagines every way the game could go, assumes you play perfectly, and picks the move with the best worst case. Alpha-Beta pruning lets it skip moves that cannot matter.</p>
+    </article>
+  </div>
+  <p class="more">Curious how it decides? <a href="{{ url_for('lab') }}">Open the lab</a> to watch computers play each other and compare how much work pruning saves.</p>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}
