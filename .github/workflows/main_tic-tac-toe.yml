@@ -1,4 +1,6 @@
 
+# Build and deploy Python app to Azure Web App
+
 name: Build and deploy Python app to Azure Web App - tic-tac-toe
 
 on:
@@ -10,43 +12,56 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      # Step 1: Get the source code from GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
+      # Step 2: Set up Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.14'
 
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
           python -m venv antenv
           source antenv/bin/activate
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
+      # Step 4: Upload application files
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: python-app
           path: |
             .
             !antenv/
+            !.git/
+            !.github/
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
+      # Step 5: Download application files
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: python-app
+          path: .
 
+      # Step 6: Deploy to Azure App Service
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'tic-tac-toe'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2539A2C61E8C4DE58D34CF0EA5FA9122 }}
+          package: .
